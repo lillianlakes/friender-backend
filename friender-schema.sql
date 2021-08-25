@@ -7,14 +7,12 @@ CREATE TABLE users (
     CHECK (position('@' IN email) > 1),
   gender VARCHAR(1),
   age TEXT NOT NULL,
-  hobbies TEXT NOT NULL,
-  interests TEXT NOT NULL,
   location VARCHAR(5),
-  friend_radius INTEGER CHECK (friend_radius >= 0 && friend_radius <= 200)
+  friend_radius INTEGER CHECK (friend_radius >= 0 AND friend_radius <= 200)
 );
 
 CREATE TABLE messages (
-  id INTEGER PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   text TEXT NOT NULL,
   timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   from_user VARCHAR(25) NOT NULL
@@ -32,7 +30,7 @@ CREATE TABLE likes (
 );
 
 CREATE TABLE hobbies (
-  name TEXT PRIMARY KEY,
+  name TEXT PRIMARY KEY
 );
 
 CREATE TABLE users_hobbies (
@@ -43,7 +41,7 @@ CREATE TABLE users_hobbies (
 );
 
 CREATE TABLE interests (
-  name TEXT PRIMARY KEY,
+  name TEXT PRIMARY KEY
 );
 
 CREATE TABLE users_interests (
