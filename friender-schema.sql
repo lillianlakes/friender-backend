@@ -9,7 +9,7 @@ CREATE TABLE users (
   age TEXT NOT NULL,
   location VARCHAR(5),
   friend_radius INTEGER CHECK (friend_radius >= 0 AND friend_radius <= 200),
-  img_source TEXT NOT NULL DEFAULT "test.jpg"
+  img_id TEXT NOT NULL DEFAULT 'test.jpg'
 );
 
 CREATE TABLE messages (

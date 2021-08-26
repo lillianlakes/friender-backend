@@ -115,15 +115,20 @@ class User {
    * 
    */
 
-  // static async upload(username, image_id) {
-  //   await db.query(
-  //     `INSERT INTO users
-  //       (image_id)
-  //       VALUES ($1)
-  //       WHERE username = $2`,
-  //   [image_id, username],
-  //   );      
-  // }
+  static async upload(username, imageID) {
+    try {
+      await db.query(
+        ` UPDATE users
+          SET img_id = $1
+          WHERE username = $2`,
+      [imageID, username],
+      )
+      console.log("HERE");  
+    } catch {
+      console.log("error");
+    }
+        
+  }
 
   /** Find all users.
    *
