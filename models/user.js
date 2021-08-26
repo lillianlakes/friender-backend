@@ -62,7 +62,7 @@ class User {
    **/
 
   static async register(
-      { username, password, firstName, lastName, email, gender, age, location, friend_radius, img_key }) {
+      { username, password, firstName, lastName, email, gender, age, location, friend_radius, image_id }) {
     const duplicateCheck = await db.query(
           `SELECT username
            FROM users
@@ -87,10 +87,10 @@ class User {
             age,
             location,
             friend_radius,
-            img_key)
+            image_id)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
            RETURNING username, first_name AS "firstName", last_name AS "lastName", 
-                     email, gender, age, location, friend_radius AS "friendRadius", img_key AS imgKey`,
+                     email, gender, age, location, friend_radius AS "friendRadius", image_id AS imageId`,
         [
           username,
           hashedPassword,
@@ -101,7 +101,7 @@ class User {
           age,
           location,
           friend_radius,
-          img_key
+          image_id
         ],
     );
 
@@ -109,6 +109,21 @@ class User {
 
     return user;
   }
+
+
+  /** Upload image.
+   * 
+   */
+
+  // static async upload(username, image_id) {
+  //   await db.query(
+  //     `INSERT INTO users
+  //       (image_id)
+  //       VALUES ($1)
+  //       WHERE username = $2`,
+  //   [image_id, username],
+  //   );      
+  // }
 
   /** Find all users.
    *
