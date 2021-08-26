@@ -18,8 +18,27 @@ const router = express.Router();
  */
 
 router.post("/:username/upload", async function (req, res, next) {
-  console.log("req.body", req.body.key)
   await User.upload(req.params.username, req.body.key);
+})
+
+/** PATCH / { user} 
+ * 
+ * Update user information
+ */
+
+ router.patch("/:username", async function (req, res, next) {
+  try {
+    // const validator = jsonschema.validate(req.body, userUpdateSchema);
+    // if (!validator.valid) {
+    //   const errs = validator.errors.map(e => e.stack);
+    //   throw new BadRequestError(errs);
+    // }
+
+    const user = await User.update(req.params.username, req.body);
+    return res.json({ user });
+  } catch (err) {
+    return next(err);
+  }
 })
 
 module.exports = router;

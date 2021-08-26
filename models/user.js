@@ -62,7 +62,7 @@ class User {
    **/
 
   static async register(
-      { username, password, firstName, lastName, email, gender, age, location, friend_radius, image_id }) {
+      { username, password, firstName, lastName, email, gender, age, location, friendRadius }) {
     const duplicateCheck = await db.query(
           `SELECT username
            FROM users
@@ -86,11 +86,10 @@ class User {
             gender,
             age,
             location,
-            friend_radius,
-            image_id)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            friend_radius)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
            RETURNING username, first_name AS "firstName", last_name AS "lastName", 
-                     email, gender, age, location, friend_radius AS "friendRadius", image_id AS imageId`,
+                     email, gender, age, location, friend_radius AS "friendRadius"`,
         [
           username,
           hashedPassword,
@@ -100,8 +99,7 @@ class User {
           gender,
           age,
           location,
-          friend_radius,
-          image_id
+          friendRadius,
         ],
     );
 
@@ -182,53 +180,56 @@ class User {
 //     return user;
 //   }
 
-//   /** Update user data with `data`.
-//    *
-//    * This is a "partial update" --- it's fine if data doesn't contain
-//    * all the fields; this only changes provided ones.
-//    *
-//    * Data can include:
-//    *   { firstName, lastName, password, email, isAdmin }
-//    *
-//    * Returns { username, firstName, lastName, email, isAdmin }
-//    *
-//    * Throws NotFoundError if not found.
-//    *
-//    * WARNING: this function can set a new password or make a user an admin.
-//    * Callers of this function must be certain they have validated inputs to this
-//    * or a serious security risks are opened.
-//    */
+  /** Update user data with `data`.
+   *
+   * This is a "partial update" --- it's fine if data doesn't contain
+   * all the fields; this only changes provided ones.
+   *
+   * Data can include:
+   *   { firstName, lastName, password, email, isAdmin }
+   *
+   * Returns { username, firstName, lastName, email, isAdmin }
+   *
+   * Throws NotFoundError if not found.
+   *
+   * WARNING: this function can set a new password or make a user an admin.
+   * Callers of this function must be certain they have validated inputs to this
+   * or a serious security risks are opened.
+   */
 
-//   static async update(username, data) {
-//     if (data.password) {
-//       data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
-//     }
+  static async update(username, data) {
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
+    }
 
-//     const { setCols, values } = sqlForPartialUpdate(
-//         data,
-//         {
-//           firstName: "first_name",
-//           lastName: "last_name",
-//           isAdmin: "is_admin",
-//         });
-//     const usernameVarIdx = "$" + (values.length + 1);
+    const { setCols, values } = sqlForPartialUpdate(
+        data,
+        {
+          firstName: "first_name",
+          lastName: "last_name",
+          friendRadius: "friend_radius"
+        });
+    const usernameVarIdx = "$" + (values.length + 1);
 
-//     const querySql = `UPDATE users 
-//                       SET ${setCols} 
-//                       WHERE username = ${usernameVarIdx} 
-//                       RETURNING username,
-//                                 first_name AS "firstName",
-//                                 last_name AS "lastName",
-//                                 email,
-//                                 is_admin AS "isAdmin"`;
-//     const result = await db.query(querySql, [...values, username]);
-//     const user = result.rows[0];
+    const querySql = `UPDATE users 
+                      SET ${setCols} 
+                      WHERE username = ${usernameVarIdx} 
+                      RETURNING username,
+                                first_name AS "firstName",
+                                last_name AS "lastName",
+                                email,
+                                gender,
+                                age,
+                                location,
+                                friend_radius AS "friendRadius"`;
+    const result = await db.query(querySql, [...values, username]);
+    const user = result.rows[0];
 
-//     if (!user) throw new NotFoundError(`No user: ${username}`);
+    if (!user) throw new NotFoundError(`No user: ${username}`);
 
-//     delete user.password;
-//     return user;
-//   }
+    delete user.password;
+    return user;
+  }
 
 //   /** Delete given user from database; returns undefined. */
 
