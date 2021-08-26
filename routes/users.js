@@ -6,6 +6,7 @@
 
 const express = require("express");
 const User = require("../models/user");
+const Hobbies = require("../models/hobbies");
 const { createToken } = require("../helper/tokens");
 const userRegisterSchema = require("../schemas/userRegister.json");
 const userAuthSchema = require("../schemas/userAuth.json");
@@ -29,6 +30,10 @@ router.post("/:username/upload", async function (req, res, next) {
 router.get("/:username", async function (req, res, next) {
   try {
     const user = await User.get(req.params.username);
+
+    const hobbies = await Hobbies.get(req.params.username);
+    user.hobbies = hobbies;
+
     return res.json({ user });
   } catch (err) {
     return next(err);
@@ -49,6 +54,7 @@ router.patch("/:username", async function (req, res, next) {
     // }
 
     const user = await User.update(req.params.username, req.body);
+    await Hobbies.update(req.body);  
     return res.json({ user });
   } catch (err) {
     return next(err);

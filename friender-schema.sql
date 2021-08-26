@@ -30,24 +30,24 @@ CREATE TABLE likes (
   PRIMARY KEY (user_liking, user_liked)
 );
 
-CREATE TABLE hobbies (
-  name TEXT PRIMARY KEY
-);
+-- CREATE TABLE hobbies (
+--   name TEXT PRIMARY KEY
+-- );
 
 CREATE TABLE users_hobbies (
   username VARCHAR(25) 
     REFERENCES users ON DELETE CASCADE,
-  hobbies TEXT 
-    REFERENCES hobbies ON DELETE CASCADE
+  hobby TEXT NOT NULL,
+  PRIMARY KEY (username, hobby)
 );
 
-CREATE TABLE interests (
-  name TEXT PRIMARY KEY
-);
+-- CREATE TABLE interests (
+--   name TEXT PRIMARY KEY
+-- );
 
 CREATE TABLE users_interests (
   username VARCHAR(25) 
     REFERENCES users ON DELETE CASCADE,
-  interests TEXT 
-    REFERENCES interests ON DELETE CASCADE
+  interest TEXT NOT NULL,
+  PRIMARY KEY (username, interest)
 );

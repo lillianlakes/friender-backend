@@ -5,6 +5,7 @@
 // const jsonschema = require("jsonschema");
 
 const User = require("../models/user");
+const Hobbies = require("../models/hobbies")
 const express = require("express");
 const router = new express.Router();
 const { createToken } = require("../helper/tokens");
@@ -48,6 +49,13 @@ router.post("/register", async function (req, res, next) {
   // }
 
   const newUser = await User.register({ ...req.body, friendRadius: Number(req.body.friendRadius) });
+ 
+  console.log(`hobbies are `, req.body.hobbies);
+
+  await Hobbies.add(req.body);  
+  // hobbies add ... connecting to specfic user
+  // interests add ... connecting to specfic user
+  
   const token = createToken(newUser);
   return res.status(201).json({ token });
 });
