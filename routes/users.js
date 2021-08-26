@@ -21,12 +21,26 @@ router.post("/:username/upload", async function (req, res, next) {
   await User.upload(req.params.username, req.body.key);
 })
 
+/** GET / { user} 
+ * 
+ *  get user information 
+ */
+
+router.get("/:username", async function (req, res, next) {
+  try {
+    const user = await User.get(req.params.username);
+    return res.json({ user });
+  } catch (err) {
+    return next(err);
+  }
+})
+
 /** PATCH / { user} 
  * 
  * Update user information
  */
 
- router.patch("/:username", async function (req, res, next) {
+router.patch("/:username", async function (req, res, next) {
   try {
     // const validator = jsonschema.validate(req.body, userUpdateSchema);
     // if (!validator.valid) {
