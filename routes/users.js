@@ -53,8 +53,15 @@ router.patch("/:username", async function (req, res, next) {
     //   throw new BadRequestError(errs);
     // }
 
-    const user = await User.update(req.params.username, req.body);
     await Hobbies.update(req.body);  
+    console.log("##########################", req.body);
+    let userInfo = {...req.body};
+    console.log("userInfo", userInfo)
+    delete userInfo["hobbies"];
+    // delete userInfo[interests];
+    
+    const user = await User.update(req.params.username, userInfo);
+    
     return res.json({ user });
   } catch (err) {
     return next(err);
