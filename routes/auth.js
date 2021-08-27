@@ -47,17 +47,34 @@ router.post("/register", async function (req, res, next) {
   //   const errs = validator.errors.map(e => e.stack);
   //   throw new BadRequestError(errs);
   // }
-
+  // TODO: look up multer -> grabs encoded data and add to req.file
   const newUser = await User.register({ ...req.body, friendRadius: Number(req.body.friendRadius) });
  
-  console.log(`hobbies are `, req.body.hobbies);
-
   await Hobbies.add(req.body);  
   // hobbies add ... connecting to specfic user
   // interests add ... connecting to specfic user
   
   const token = createToken(newUser);
   return res.status(201).json({ token });
+
+  //// TODO: make this work
+  // async function uploadToS3(options) {
+  //   await s3
+  //     .putObject({
+  //       Bucket: options.bucket,
+  //       ACL: options.acl || "public-read",
+  //       Key: options.key,
+  //       Body: Buffer.from(options.data, "base64"),
+  //       ContentType: options.contentType,
+  //     })
+  //     .promise();
+  
+  //   return {
+  //     url: `https://${options.bucket}.s3.amazonaws.com/${options.key}`,
+  //     name: options.key,
+  //     type: options.contentType || "application/",
+  //   };
+  // };
 });
 
 
